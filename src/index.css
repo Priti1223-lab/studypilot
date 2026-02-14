@@ -1,0 +1,103 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ================= THEME VARIABLES ================= */
+
+/* DARK */
+.dark {
+  --bg: #0f172a;
+  --card: #111827;
+  --borderc: #1f2937;
+  --text: #e5e7eb;
+  --accent: #22c55e;
+  --soft: rgba(180,190,200,0.7);
+}
+
+/* LIGHT */
+.light {
+  --bg: #f3f4f6;
+  --card: #ffffff;
+  --borderc: #d1d5db;
+  --text: #111827;
+  --accent: #16a34a;
+  --soft: rgba(80,90,100,0.75);
+}
+
+/* BLUE */
+.blue {
+  --bg: #e0f2fe;
+  --card: #ffffff;
+  --borderc: #7dd3fc;
+  --text: #0c4a6e;
+  --accent: #0284c7;
+  --soft: rgba(12,74,110,0.65);
+}
+
+/* GREEN */
+.green {
+  --bg: #dcfce7;
+  --card: #ffffff;
+  --borderc: #86efac;
+  --text: #14532d;
+  --accent: #16a34a;
+  --soft: rgba(20,83,45,0.65);
+}
+
+/* ================= GLOBAL ================= */
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: system-ui, sans-serif;
+  transition: background .25s, color .25s;
+}
+
+/* ================= TAILWIND BINDINGS (MAIN CONTROL) ================= */
+
+.bg-bg { background: var(--bg) !important; }
+.bg-card { background: var(--card) !important; }
+.border-borderc { border-color: var(--borderc) !important; }
+
+.text-textc { color: var(--text) !important; }
+.text-soft { color: var(--soft) !important; }
+.text-accent { color: var(--accent) !important; }
+
+/* ================= COMPONENT HELPERS ================= */
+
+.card {
+  @apply bg-card border border-borderc rounded-xl shadow-sm;
+}
+
+.title {
+  @apply text-accent font-semibold tracking-wide;
+}
+
+/* ================= INPUT FIX ================= */
+
+input, textarea, select {
+  color: var(--text);
+  background: var(--card);
+  border: 1px solid var(--borderc);
+}
+
+::placeholder {
+  color: var(--soft);
+}
+
+/* ================= SAFE RESET ================= */
+
+/* REMOVE forced colors — only inherit */
+p, span, label, li, h1, h2, h3, h4, h5, h6 {
+  color: inherit;
+}
+
+/* buttons untouched */
+button {
+  transition: all .18s ease;
+}
+
+/* smooth UI */
+* {
+  transition: background .18s ease, color .18s ease, border .18s ease;
+}
