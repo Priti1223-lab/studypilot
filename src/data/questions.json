@@ -1,31 +1,32 @@
-[
-  {
-    "class": "11",
-    "subject": "biology",
-    "chapter": "cell",
-    "question": "Powerhouse of cell is?",
-    "options": ["Ribosome", "Mitochondria", "Golgi body", "Nucleus"],
-    "answer": 1,
-    "explanation": "Mitochondria ATP produce karta hai"
-  },
+{
+  "11": {
+    "biology": {
+      "the-living-world": [
+        {
+          "q": "Growth is characteristic of?",
+          "options": ["Living only", "Non living", "Both", "None"],
+          "answer": 0,
+          "explanation": "Only living organisms show internal growth due to cell division."
+        }
+      ],
 
-  {
-    "class": "11",
-    "subject": "biology",
-    "chapter": "cell",
-    "question": "Which organelle contains digestive enzymes?",
-    "options": ["Lysosome", "Ribosome", "Peroxisome", "Nucleus"],
-    "answer": 0,
-    "explanation": "Lysosome intracellular digestion karta hai"
-  },
+      "biological-classification": [
+        {
+          "q": "5 kingdom classification given by?",
+          "options": ["Linnaeus", "Whittaker", "Darwin", "Aristotle"],
+          "answer": 1,
+          "explanation": "R.H. Whittaker proposed 5 kingdom classification in 1969."
+        }
+      ],
 
-  {
-    "class": "12",
-    "subject": "biology",
-    "chapter": "human-reproduction",
-    "question": "LH surge causes?",
-    "options": ["Ovulation", "Implantation", "Menstruation", "Fertilization"],
-    "answer": 0,
-    "explanation": "LH surge ovulation trigger karta hai"
+      "cell-the-unit-of-life": [
+        {
+          "q": "Powerhouse of cell is?",
+          "options": ["Ribosome", "Mitochondria", "Golgi body", "Nucleus"],
+          "answer": 1,
+          "explanation": "Mitochondria produces ATP via oxidative phosphorylation."
+        }
+      ]
+    }
   }
-]
+}
