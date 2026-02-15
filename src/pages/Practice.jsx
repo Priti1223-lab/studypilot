@@ -1,9 +1,10 @@
 import { useState, useEffect } from "react"
 
 const correctMessages = [
-"Wah bhai 🔥","Concept pakad liya tune","Seedha +4 mil gaya","Doctor material 😎",
-"AIIMS calling ☎️","NCERT strong ho rahi hai","Tu ruk rank aa rahi hai",
-"Perfect attempt","Topper vibes","Bahut badhiya","Confidence boost unlocked","Legend move"
+"Wah bhai 🔥","Concept pakad liya tune","Seedha +4 mil gaya",
+"Doctor material 😎","AIIMS calling ☎️","NCERT strong ho rahi hai",
+"Tu ruk rank aa rahi hai","Perfect attempt","Topper vibes",
+"Bahut badhiya","Confidence boost unlocked","Legend move"
 ]
 
 const wrongMessages = [
@@ -20,7 +21,6 @@ export default function Practice({ cls, subject, chapter }) {
   const [selected, setSelected] = useState(null)
   const [result, setResult] = useState(null)
   const [reaction, setReaction] = useState("")
-  const [loading, setLoading] = useState(true)
 
   useEffect(() => {
     fetch("/questions.json")
@@ -30,20 +30,19 @@ export default function Practice({ cls, subject, chapter }) {
           q => q.class === cls && q.subject === subject && q.chapter === chapter
         )
         setQuestions(filtered)
-        setLoading(false)
       })
   }, [cls, subject, chapter])
+
+  const q = questions[index]
 
   function random(arr){
     return arr[Math.floor(Math.random()*arr.length)]
   }
 
   function checkAnswer(i){
-    if(!questions[index]) return
-
     setSelected(i)
 
-    if(i === questions[index].answer){
+    if(i === q.answer){
       setResult("correct")
       setReaction(random(correctMessages))
     }else{
@@ -59,17 +58,9 @@ export default function Practice({ cls, subject, chapter }) {
     setReaction("")
   }
 
-  // loading state
-  if(loading){
+  if(!q){
     return <div className="p-6 text-white">Loading questions...</div>
   }
-
-  // no questions
-  if(!questions.length){
-    return <div className="p-6 text-white">No questions found</div>
-  }
-
-  const q = questions[index]
 
   return (
     <div className="p-4 sm:p-6 text-white max-w-2xl mx-auto">
