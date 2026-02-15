@@ -6,12 +6,15 @@ export default function Sidebar({ activeTab, setActiveTab }) {
   const menuItems = [
     { id: 'dashboard', label: 'Dashboard', icon: '📊' },
     { id: 'mcq', label: 'Daily MCQ', icon: '📝' },
+
+    // ⭐ NEW CHAPTER PRACTICE
+    { id: 'practice-selector', label: 'Chapter Practice', icon: '🧠' },
+
     { id: 'pomodoro', label: 'Pomodoro Timer', icon: '⏳' },
     { id: 'weak-chapters', label: 'Weak Chapters', icon: '📚' },
     { id: 'revision', label: 'Revision Planner', icon: '📅' },
     { id: 'mistakes', label: 'Mistake Notebook', icon: '📖' },
 
-    // ===== NEW TOOL =====
     { id: 'formula', label: 'Formula Sheets', icon: '📘' },
 
     { id: 'bmi', label: 'BMI Calculator', icon: '⚖️' },

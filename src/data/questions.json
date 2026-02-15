@@ -1,0 +1,31 @@
+[
+  {
+    "class": "11",
+    "subject": "biology",
+    "chapter": "cell",
+    "question": "Powerhouse of cell is?",
+    "options": ["Ribosome", "Mitochondria", "Golgi body", "Nucleus"],
+    "answer": 1,
+    "explanation": "Mitochondria ATP produce karta hai"
+  },
+
+  {
+    "class": "11",
+    "subject": "biology",
+    "chapter": "cell",
+    "question": "Which organelle contains digestive enzymes?",
+    "options": ["Lysosome", "Ribosome", "Peroxisome", "Nucleus"],
+    "answer": 0,
+    "explanation": "Lysosome intracellular digestion karta hai"
+  },
+
+  {
+    "class": "12",
+    "subject": "biology",
+    "chapter": "human-reproduction",
+    "question": "LH surge causes?",
+    "options": ["Ovulation", "Implantation", "Menstruation", "Fertilization"],
+    "answer": 0,
+    "explanation": "LH surge ovulation trigger karta hai"
+  }
+]

@@ -22,13 +22,24 @@ import WeightGainPlanner from './components/health/WeightGainPlanner'
 import StudyHoursChart from './components/charts/StudyHoursChart'
 import WeightTrackingChart from './components/charts/WeightTrackingChart'
 
-import FormulaSheets from './pages/FormulaSheets'   // ⭐ IMPORTANT
+import FormulaSheets from './pages/FormulaSheets'
+import PracticeSelector from './pages/PracticeSelector'
+import Practice from './pages/Practice'
 
 export default function App() {
 
   const { user, loading } = useAuth()
   const [showLogin, setShowLogin] = useState(true)
   const [activeTab, setActiveTab] = useState('dashboard')
+
+  // ⭐ selected chapter data
+  const [practiceData, setPracticeData] = useState(null)
+
+  // ⭐ start practice function
+  function startPractice(cls, subject, chapter){
+    setPracticeData({cls, subject, chapter})
+    setActiveTab("practice")
+  }
 
   if (loading) {
     return (
@@ -53,12 +64,20 @@ export default function App() {
     switch (activeTab) {
       case 'dashboard': return <Dashboard />
       case 'mcq': return <DailyMCQ />
+
+      // ⭐ NEW CHAPTER PRACTICE FLOW
+      case 'practice-selector':
+        return <PracticeSelector startPractice={startPractice} />
+
+      case 'practice':
+        return <Practice {...practiceData} />
+
       case 'pomodoro': return <PomodoroTimer />
       case 'weak-chapters': return <WeakChapterTracker />
       case 'revision': return <RevisionPlanner />
       case 'mistakes': return <MistakeNotebook />
 
-      case 'formula': return <FormulaSheets />   // ⭐ FIXED
+      case 'formula': return <FormulaSheets />
 
       case 'bmi': return <BMICalculator />
       case 'calories': return <CalorieCalculator />
@@ -67,6 +86,7 @@ export default function App() {
       case 'weight-gain': return <WeightGainPlanner />
       case 'study-chart': return <StudyHoursChart />
       case 'weight-chart': return <WeightTrackingChart />
+
       default: return <Dashboard />
     }
   }
