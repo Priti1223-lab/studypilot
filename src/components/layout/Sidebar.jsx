@@ -10,6 +10,10 @@ export default function Sidebar({ activeTab, setActiveTab }) {
     { id: 'weak-chapters', label: 'Weak Chapters', icon: '📚' },
     { id: 'revision', label: 'Revision Planner', icon: '📅' },
     { id: 'mistakes', label: 'Mistake Notebook', icon: '📖' },
+
+    // ===== NEW TOOL =====
+    { id: 'formula', label: 'Formula Sheets', icon: '📘' },
+
     { id: 'bmi', label: 'BMI Calculator', icon: '⚖️' },
     { id: 'calories', label: 'Calorie Calculator', icon: '🔥' },
     { id: 'protein', label: 'Protein Calculator', icon: '💪' },
@@ -72,4 +76,3 @@ export default function Sidebar({ activeTab, setActiveTab }) {
     </>
   )
 }
-
