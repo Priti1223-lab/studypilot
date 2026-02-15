@@ -32,26 +32,15 @@ export default function App() {
   const [showLogin, setShowLogin] = useState(true)
   const [activeTab, setActiveTab] = useState('dashboard')
 
-  // ⭐ selected chapter data
   const [practiceData, setPracticeData] = useState(null)
 
-  // ⭐ start practice function
   function startPractice(cls, subject, chapter){
     setPracticeData({cls, subject, chapter})
     setActiveTab("practice")
   }
 
   if (loading) {
-    return (
-      <div className="min-h-screen flex items-center justify-center bg-dark-bg">
-        <div className="text-center">
-          <div className="inline-block w-16 h-16 bg-primary rounded-2xl flex items-center justify-center mb-4 animate-pulse">
-            <span className="text-textc font-bold text-3xl">S</span>
-          </div>
-          <p className="text-soft">Loading...</p>
-        </div>
-      </div>
-    )
+    return <div className="min-h-screen flex items-center justify-center">Loading...</div>
   }
 
   if (!user) {
@@ -63,21 +52,19 @@ export default function App() {
   const renderContent = () => {
     switch (activeTab) {
       case 'dashboard': return <Dashboard />
-      case 'mcq': return <DailyMCQ />
 
-      // ⭐ NEW CHAPTER PRACTICE FLOW
       case 'practice-selector':
         return <PracticeSelector startPractice={startPractice} />
 
       case 'practice':
         return <Practice {...practiceData} />
 
+      case 'formula': return <FormulaSheets />
+      case 'mcq': return <DailyMCQ />
       case 'pomodoro': return <PomodoroTimer />
       case 'weak-chapters': return <WeakChapterTracker />
       case 'revision': return <RevisionPlanner />
       case 'mistakes': return <MistakeNotebook />
-
-      case 'formula': return <FormulaSheets />
 
       case 'bmi': return <BMICalculator />
       case 'calories': return <CalorieCalculator />
@@ -105,34 +92,6 @@ export default function App() {
           </div>
         </main>
       </div>
-
-      <footer className="border-t border-borderc py-8 text-center bg-dark-bg">
-
-        <p className="text-soft text-sm tracking-wide">
-          Made with love ❤️ Aryan Neptune
-        </p>
-
-        <div className="flex justify-center gap-4 mt-4 flex-wrap">
-
-          <a
-            href="https://whatsapp.com/channel/0029VbC3VH70VycFrhI58Y2q"
-            target="_blank"
-            className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-[#25D366] text-black font-medium hover:scale-105 transition"
-          >
-            📱 WhatsApp Channel
-          </a>
-
-          <a
-            href="https://www.instagram.com/usetecharyan"
-            target="_blank"
-            className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-gradient-to-r from-pink-500 via-red-500 to-yellow-500 text-white font-medium hover:scale-105 transition"
-          >
-            📸 Instagram
-          </a>
-
-        </div>
-
-      </footer>
     </div>
   )
 }
