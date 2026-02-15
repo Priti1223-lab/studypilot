@@ -1,24 +1,35 @@
-import questions from "../data/questions.json"
-import { useState } from "react"
+import { useState, useEffect } from "react"
 
 export default function PracticeSelector({ startPractice }) {
 
   const [cls, setCls] = useState("11")
   const [subject, setSubject] = useState("biology")
+  const [questions, setQuestions] = useState([])
+  const [chapters, setChapters] = useState([])
+
+  // load json from public folder
+  useEffect(() => {
+    fetch("/questions.json")
+      .then(res => res.json())
+      .then(data => setQuestions(data))
+  }, [])
 
   // auto chapter detect
-  const chapters = [
-    ...new Set(
-      questions
-        .filter(q => q.class === cls && q.subject === subject)
-        .map(q => q.chapter)
-    )
-  ]
+  useEffect(() => {
+    const ch = [
+      ...new Set(
+        questions
+          .filter(q => q.class === cls && q.subject === subject)
+          .map(q => q.chapter)
+      )
+    ]
+    setChapters(ch)
+  }, [questions, cls, subject])
 
   return (
-    <div className="p-6 text-textc max-w-xl mx-auto">
+    <div className="p-4 sm:p-6 text-textc max-w-xl mx-auto">
 
-      <h1 className="text-3xl font-bold mb-6 text-accent">
+      <h1 className="text-2xl sm:text-3xl font-bold mb-6 text-accent">
         🧠 Chapter Practice
       </h1>
 
@@ -49,7 +60,7 @@ export default function PracticeSelector({ startPractice }) {
       <div className="space-y-3">
 
         {chapters.length === 0 && (
-          <p className="text-soft">No chapters available</p>
+          <p className="text-soft">Loading chapters...</p>
         )}
 
         {chapters.map((ch)=>(
@@ -67,3 +78,4 @@ export default function PracticeSelector({ startPractice }) {
     </div>
   )
 }
+
