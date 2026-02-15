@@ -1,9 +1,26 @@
-import { useState } from "react"
-import rawQuestions from "../data/questions.json"
+import { useState, useEffect } from "react"
 
-const questions = Array.isArray(rawQuestions)
-  ? rawQuestions
-  : rawQuestions.default || []
+export default function Practice({ cls, subject, chapter }) {
+
+  const [questions, setQuestions] = useState([])
+  const [index, setIndex] = useState(0)
+  const [selected, setSelected] = useState(null)
+  const [result, setResult] = useState(null)
+  const [reaction, setReaction] = useState("")
+
+  useEffect(() => {
+    fetch("/questions.json")
+      .then(res => res.json())
+      .then(data => {
+        const filtered = data.filter(
+          q => q.class === cls && q.subject === subject && q.chapter === chapter
+        )
+        setQuestions(filtered)
+      })
+  }, [cls, subject, chapter])
+
+  const q = questions[index]
+
 
 const correctMessages = [
 "Wah bhai 🔥",
