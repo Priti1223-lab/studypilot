@@ -1,40 +1,34 @@
-import { useState, useEffect } from "react"
+import { useEffect, useState } from "react"
 
 export default function PracticeSelector({ startPractice }) {
 
   const [cls, setCls] = useState("11")
   const [subject, setSubject] = useState("biology")
-  const [questions, setQuestions] = useState([])
   const [chapters, setChapters] = useState([])
 
-  // load json from public folder
   useEffect(() => {
     fetch("/questions.json")
       .then(res => res.json())
-      .then(data => setQuestions(data))
-  }, [])
-
-  // auto chapter detect
-  useEffect(() => {
-    const ch = [
-      ...new Set(
-        questions
-          .filter(q => q.class === cls && q.subject === subject)
-          .map(q => q.chapter)
-      )
-    ]
-    setChapters(ch)
-  }, [questions, cls, subject])
+      .then(data => {
+        const ch = [
+          ...new Set(
+            data
+              .filter(q => q.class === cls && q.subject === subject)
+              .map(q => q.chapter)
+          )
+        ]
+        setChapters(ch)
+      })
+  }, [cls, subject])
 
   return (
-    <div className="p-4 sm:p-6 text-textc max-w-xl mx-auto">
+    <div className="p-4 md:p-6 text-white max-w-xl mx-auto">
 
-      <h1 className="text-2xl sm:text-3xl font-bold mb-6 text-accent">
+      <h1 className="text-2xl md:text-3xl font-bold mb-6 text-accent">
         🧠 Chapter Practice
       </h1>
 
-      {/* Class */}
-      <label className="block mb-2">Select Class</label>
+      <label className="block mb-2">Class</label>
       <select
         value={cls}
         onChange={(e)=>setCls(e.target.value)}
@@ -44,8 +38,7 @@ export default function PracticeSelector({ startPractice }) {
         <option value="12">Class 12</option>
       </select>
 
-      {/* Subject */}
-      <label className="block mb-2">Select Subject</label>
+      <label className="block mb-2">Subject</label>
       <select
         value={subject}
         onChange={(e)=>setSubject(e.target.value)}
@@ -56,11 +49,9 @@ export default function PracticeSelector({ startPractice }) {
         <option value="physics">Physics</option>
       </select>
 
-      {/* Chapters */}
       <div className="space-y-3">
-
         {chapters.length === 0 && (
-          <p className="text-soft">Loading chapters...</p>
+          <p className="text-gray-400">No chapters found</p>
         )}
 
         {chapters.map((ch)=>(
@@ -72,10 +63,10 @@ export default function PracticeSelector({ startPractice }) {
             {ch.replaceAll("-"," ").toUpperCase()}
           </button>
         ))}
-
       </div>
 
     </div>
   )
 }
+
 

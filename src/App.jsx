@@ -32,6 +32,7 @@ export default function App() {
   const [showLogin, setShowLogin] = useState(true)
   const [activeTab, setActiveTab] = useState('dashboard')
 
+  // ⭐ selected chapter
   const [practiceData, setPracticeData] = useState(null)
 
   function startPractice(cls, subject, chapter){
@@ -39,9 +40,7 @@ export default function App() {
     setActiveTab("practice")
   }
 
-  if (loading) {
-    return <div className="min-h-screen flex items-center justify-center">Loading...</div>
-  }
+  if (loading) return <div className="p-10 text-white">Loading...</div>
 
   if (!user) {
     return showLogin
@@ -49,15 +48,17 @@ export default function App() {
       : <Signup onToggle={() => setShowLogin(true)} />
   }
 
-  const renderContent = () => {
+  function renderContent() {
+
     switch (activeTab) {
-      case 'dashboard': return <Dashboard />
 
       case 'practice-selector':
         return <PracticeSelector startPractice={startPractice} />
 
       case 'practice':
-        return <Practice {...practiceData} />
+        // 🔴 CRASH FIX
+        if(!practiceData) return <PracticeSelector startPractice={startPractice} />
+        return <Practice cls={practiceData.cls} subject={practiceData.subject} chapter={practiceData.chapter} />
 
       case 'formula': return <FormulaSheets />
       case 'mcq': return <DailyMCQ />
@@ -65,7 +66,6 @@ export default function App() {
       case 'weak-chapters': return <WeakChapterTracker />
       case 'revision': return <RevisionPlanner />
       case 'mistakes': return <MistakeNotebook />
-
       case 'bmi': return <BMICalculator />
       case 'calories': return <CalorieCalculator />
       case 'protein': return <ProteinCalculator />
@@ -86,12 +86,11 @@ export default function App() {
       <div className="flex flex-1">
         <Sidebar activeTab={activeTab} setActiveTab={setActiveTab} />
 
-        <main className="flex-1 p-6 lg:p-8 overflow-auto">
-          <div className="max-w-7xl mx-auto">
-            {renderContent()}
-          </div>
+        <main className="flex-1 p-4 md:p-6 overflow-auto">
+          {renderContent()}
         </main>
       </div>
+
     </div>
   )
 }
