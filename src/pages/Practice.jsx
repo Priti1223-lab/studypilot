@@ -1,5 +1,9 @@
 import { useState } from "react"
-import questions from "../data/questions.json"
+import rawQuestions from "../data/questions.json"
+
+const questions = Array.isArray(rawQuestions)
+  ? rawQuestions
+  : rawQuestions.default || []
 
 const correctMessages = [
 "Wah bhai 🔥",
@@ -33,16 +37,16 @@ const wrongMessages = [
 
 export default function Practice({ cls, subject, chapter }) {
 
-  // ⭐ NEW TREE ACCESS (NO FILTER)
-  const chapterQuestions =
-    questions?.[cls]?.[subject]?.[chapter] || []
+  const filteredQuestions = questions.filter(
+    q => q.class === cls && q.subject === subject && q.chapter === chapter
+  )
 
   const [index, setIndex] = useState(0)
   const [selected, setSelected] = useState(null)
   const [result, setResult] = useState(null)
   const [reaction, setReaction] = useState("")
 
-  const q = chapterQuestions[index]
+  const q = filteredQuestions[index]
 
   function random(arr){
     return arr[Math.floor(Math.random()*arr.length)]
@@ -61,40 +65,37 @@ export default function Practice({ cls, subject, chapter }) {
   }
 
   function nextQuestion(){
-    setIndex((prev)=> (prev+1) % chapterQuestions.length)
+    setIndex((prev)=> (prev+1) % filteredQuestions.length)
     setSelected(null)
     setResult(null)
     setReaction("")
   }
 
-  // ⭐ SAFETY (important)
-  if(!Array.isArray(chapterQuestions) || chapterQuestions.length === 0){
+  if(!q){
     return (
-      <div className="p-10 text-center text-xl text-textc">
+      <div className="p-6 text-textc">
         No questions found for this chapter
       </div>
     )
   }
 
   return (
-    <div className="p-4 sm:p-6 text-white max-w-3xl mx-auto">
+    <div className="p-4 sm:p-6 text-white max-w-2xl mx-auto">
 
-      <h1 className="text-xl sm:text-2xl font-bold mb-4 text-center">
+      <h1 className="text-xl sm:text-2xl font-bold mb-4">
         Class {cls} • {subject} • {chapter.replaceAll("-"," ")}
       </h1>
 
-      <div className="bg-card p-4 sm:p-6 rounded-2xl border border-borderc shadow-xl">
+      <div className="bg-card p-4 sm:p-6 rounded-xl border border-borderc">
 
-        <h2 className="text-base sm:text-lg mb-5 leading-relaxed">
-          {q.question}
-        </h2>
+        <h2 className="text-base sm:text-lg mb-4">{q.question}</h2>
 
         <div className="space-y-3">
           {q.options.map((opt,i)=>(
             <button
               key={i}
               onClick={()=>checkAnswer(i)}
-              className={`w-full text-left p-3 sm:p-4 rounded-xl border transition text-sm sm:text-base
+              className={`w-full text-left p-3 rounded-lg border transition
               ${
                 selected===i
                 ? i===q.answer
@@ -109,28 +110,20 @@ export default function Practice({ cls, subject, chapter }) {
         </div>
 
         {result && (
-          <div className="mt-6 text-center">
-
-            <p className="text-yellow-300 font-semibold text-lg animate-pulse">
-              {reaction}
-            </p>
-
-            <p className="text-soft mt-3 text-sm sm:text-base leading-relaxed">
-              📖 {q.explanation}
-            </p>
+          <div className="mt-5">
+            <p className="text-yellow-300 font-semibold">{reaction}</p>
+            <p className="text-soft mt-2">📖 {q.explanation}</p>
 
             <button
               onClick={nextQuestion}
-              className="mt-6 px-6 py-3 bg-blue-600 rounded-xl hover:scale-105 active:scale-95 transition font-semibold"
+              className="mt-4 px-4 py-2 bg-blue-600 rounded-lg hover:scale-105 transition"
             >
               Next Question →
             </button>
-
           </div>
         )}
 
       </div>
-
     </div>
   )
 }
