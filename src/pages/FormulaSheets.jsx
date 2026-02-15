@@ -3,56 +3,87 @@ import { supabase } from "../lib/supabaseClient";
 
 export default function FormulaSheets() {
   const [files, setFiles] = useState([]);
-  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    fetchFiles();
+    fetchAllPDFs();
   }, []);
 
-  async function fetchFiles() {
-    setLoading(true);
+  function beautifyName(name) {
+    return name
+      .replace(".pdf", "")
+      .replaceAll("-", " ")
+      .replace(/\b\w/g, l => l.toUpperCase());
+  }
 
-    const { data, error } = await supabase.storage
-      .from("formula-pdfs")
-      .list("class-11/physics", { limit: 100 });
+  async function fetchAllPDFs() {
+    const classes = ["class-11", "class-12"];
+    const subjects = ["physics", "chemistry", "biology"];
 
-    if (!error && data) {
-      const formatted = data.map((file) => ({
-        name: file.name,
-        url: `https://cuwyenqdtyawerwkcion.supabase.co/storage/v1/object/public/formula-pdfs/class-11/physics/${file.name}`
-      }));
+    let result = [];
 
-      setFiles(formatted);
+    for (const cls of classes) {
+      for (const sub of subjects) {
+
+        const { data } = await supabase.storage
+          .from("formula-pdfs")
+          .list(`${cls}/${sub}`, { limit: 100 });
+
+        if (!data) continue;
+
+        for (const file of data) {
+
+          if (!file.name.endsWith(".pdf")) continue;
+
+          const { data: publicData } = supabase
+            .storage
+            .from("formula-pdfs")
+            .getPublicUrl(`${cls}/${sub}/${file.name}`);
+
+          result.push({
+            class: cls.replace("class-", "Class "),
+            subject: sub.charAt(0).toUpperCase() + sub.slice(1),
+            chapter: beautifyName(file.name),
+            url: publicData.publicUrl
+          });
+        }
+      }
     }
 
-    setLoading(false);
+    setFiles(result);
   }
 
   return (
     <div className="p-6 text-white">
       <h1 className="text-3xl font-bold mb-6">📘 Formula Sheets</h1>
 
-      {loading && <p>Loading formulas...</p>}
+      {files.length === 0 && (
+        <p className="text-soft">No PDFs found...</p>
+      )}
 
       <div className="grid gap-4">
-        {files.map((file, i) => (
-          <div
-            key={i}
-            className="bg-card border border-borderc rounded-xl p-4 flex justify-between items-center"
-          >
-            <span>{file.name}</span>
+        {files.map((pdf, i) => (
+          <div key={i} className="bg-card border border-borderc rounded-xl p-4 flex justify-between items-center">
+
+            <div>
+              <h2 className="text-lg font-semibold">
+                {pdf.class} • {pdf.subject}
+              </h2>
+              <p className="text-soft">{pdf.chapter}</p>
+            </div>
 
             <a
-              href={file.url}
+              href={pdf.url}
               target="_blank"
               rel="noreferrer"
               className="px-4 py-2 bg-blue-600 rounded-lg hover:bg-blue-700 transition"
             >
               Download
             </a>
+
           </div>
         ))}
       </div>
     </div>
   );
 }
+
