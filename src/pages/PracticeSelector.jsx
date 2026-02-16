@@ -7,18 +7,23 @@ export default function PracticeSelector({ startPractice }) {
   const [chapters, setChapters] = useState([])
 
   useEffect(() => {
+
     fetch("/questions.json")
       .then(res => res.json())
       .then(data => {
 
-        // IMPORTANT: numbers ko string me convert
-        const filtered = data.filter(q =>
-          String(q.class) === String(cls) &&
-          String(q.subject).toLowerCase() === subject.toLowerCase()
-        )
+        const classKey = cls === "11" ? "class11" : "class12"
 
-        const uniqueChapters = [...new Set(filtered.map(q => q.chapter))]
-        setChapters(uniqueChapters)
+        const subjectData = data?.classes?.[classKey]?.[subject]
+
+        if (!subjectData) {
+          setChapters([])
+          return
+        }
+
+        // ⭐ chapter names = object keys
+        setChapters(Object.keys(subjectData))
+
       })
       .catch(err => {
         console.error("JSON LOAD ERROR:", err)
@@ -28,7 +33,7 @@ export default function PracticeSelector({ startPractice }) {
   }, [cls, subject])
 
   return (
-    <div className="p-4 md:p-6 text-white max-w-xl mx-auto">
+    <div className="p-4 md:p-6 text-textc max-w-xl mx-auto">
 
       <h1 className="text-2xl md:text-3xl font-bold mb-6 text-accent">
         🧠 Chapter Practice
@@ -61,8 +66,8 @@ export default function PracticeSelector({ startPractice }) {
       <div className="space-y-3">
 
         {chapters.length === 0 && (
-          <p className="text-gray-400">
-            No chapters found (JSON mismatch)
+          <p className="text-soft">
+            No chapters available
           </p>
         )}
 

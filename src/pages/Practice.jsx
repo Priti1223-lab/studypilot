@@ -3,16 +3,12 @@ import { useState, useEffect } from "react"
 const correctMessages = [
 "Wah bhai 🔥","Concept pakad liya tune","Seedha +4 mil gaya",
 "Doctor material 😎","AIIMS calling ☎️","NCERT strong ho rahi hai",
-"Tu ruk rank aa rahi hai","Perfect attempt","Topper vibes",
-"Bahut badhiya","Confidence boost unlocked","Legend move"
+"Perfect attempt","Topper vibes","Bahut badhiya"
 ]
 
 const wrongMessages = [
-"Koi na bhai","Sabse common mistake yehi","NCERT line miss ho gayi",
-"Isko mark kar revise me","Almost tha","Galti samajh gaya to +4 next",
-"Yahi question exam me aata","Ab yaad rahega lifetime",
-"Concept thoda hil gaya","Next wala sahi karega",
-"Ye trap question tha","Learning ho rahi hai"
+"Koi na bhai","NCERT line miss ho gayi","Revise karna padega",
+"Almost tha","Next wala sahi hoga","Ye trap question tha"
 ]
 
 export default function Practice({ cls, subject, chapter }) {
@@ -24,22 +20,21 @@ export default function Practice({ cls, subject, chapter }) {
   const [reaction, setReaction] = useState("")
   const [loading, setLoading] = useState(true)
 
-  // 🔥 LOAD QUESTIONS
+  // 🔥 LOAD QUESTIONS (NEW DATABASE STRUCTURE)
   useEffect(() => {
+
     setLoading(true)
 
     fetch("/questions.json")
       .then(res => res.json())
       .then(data => {
 
-        // ⭐ TYPE SAFE FILTER
-        const filtered = data.filter(q =>
-          String(q.class) === String(cls) &&
-          q.subject.toLowerCase() === subject.toLowerCase() &&
-          q.chapter.toLowerCase() === chapter.toLowerCase()
-        )
+        const classKey = cls === "11" ? "class11" : "class12"
 
-        setQuestions(filtered)
+        const chapterQuestions =
+          data?.classes?.[classKey]?.[subject]?.[chapter] || []
+
+        setQuestions(chapterQuestions)
         setIndex(0)
         setSelected(null)
         setResult(null)
@@ -53,7 +48,7 @@ export default function Practice({ cls, subject, chapter }) {
 
   // ===== SAFETY =====
   if (loading)
-    return <div className="p-6 text-white">Loading questions...</div>
+    return <div className="p-6 text-textc">Loading questions...</div>
 
   if (!questions.length)
     return <div className="p-6 text-red-400">No questions found for this chapter</div>
@@ -84,7 +79,7 @@ export default function Practice({ cls, subject, chapter }) {
   }
 
   return (
-    <div className="p-4 sm:p-6 text-white max-w-2xl mx-auto">
+    <div className="p-4 sm:p-6 text-textc max-w-2xl mx-auto">
 
       <h1 className="text-xl sm:text-2xl font-bold mb-4">
         Class {cls} • {subject} • {chapter.replaceAll("-"," ")}
@@ -103,8 +98,8 @@ export default function Practice({ cls, subject, chapter }) {
               ${
                 selected===i
                 ? i===q.answer
-                  ? "bg-green-600 border-green-400"
-                  : "bg-red-600 border-red-400"
+                  ? "bg-green-600 border-green-400 text-white"
+                  : "bg-red-600 border-red-400 text-white"
                 : "hover:bg-bg border-borderc"
               }`}
             >
@@ -120,7 +115,7 @@ export default function Practice({ cls, subject, chapter }) {
 
             <button
               onClick={nextQuestion}
-              className="mt-4 px-4 py-2 bg-blue-600 rounded-lg hover:scale-105 transition"
+              className="mt-4 px-4 py-2 bg-blue-600 rounded-lg hover:scale-105 transition text-white"
             >
               Next Question →
             </button>
@@ -131,4 +126,5 @@ export default function Practice({ cls, subject, chapter }) {
     </div>
   )
 }
+
 

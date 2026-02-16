@@ -1,95 +1,43 @@
 {
-  "11": {
-    "biology": {
+  "classes": {
+    "class11": {
+      "biology": {
 
-      "the-living-world": [
+        "the-living-world": [
+          {
+            "question": "Living organisms are distinguished from non-living objects by their ability for",
+            "options": ["Growth", "Reproduction", "Metabolism", "Movement"],
+            "answer": 2,
+            "explanation": "Metabolism is the defining property of living organisms according to NCERT."
+          },
+          {
+            "question": "Increase in mass and increase in number of individuals are twin characteristics of",
+            "options": ["Growth", "Reproduction", "Metabolism", "Consciousness"],
+            "answer": 1,
+            "explanation": "Reproduction increases number of individuals while growth increases mass."
+          },
+          {
+            "question": "Growth in multicellular organisms occurs by",
+            "options": ["Cell enlargement", "Cell division", "Reproduction", "Metabolism"],
+            "answer": 1,
+            "explanation": "Multicellular organisms grow by mitotic cell division."
+          },
+          {
+            "question": "Binomial nomenclature was proposed by",
+            "options": ["Darwin", "Linnaeus", "Whittaker", "Aristotle"],
+            "answer": 1,
+            "explanation": "Carolus Linnaeus introduced binomial nomenclature."
+          }
+        ],
 
-        {
-          "question": "Living organisms are distinguished from non-living objects by their ability for",
-          "options": ["Growth", "Reproduction", "Metabolism", "Movement"],
-          "answer": 2,
-          "explanation": "Metabolism is the defining property of living organisms according to NCERT."
-        },
+        "biological-classification": [],
+        "plant-kingdom": [],
+        "animal-kingdom": []
+      }
+    },
 
-        {
-          "question": "Increase in mass and increase in number of individuals are twin characteristics of",
-          "options": ["Growth", "Reproduction", "Metabolism", "Consciousness"],
-          "answer": 1,
-          "explanation": "Reproduction increases number of individuals while growth increases mass."
-        },
-
-        {
-          "question": "Growth in multicellular organisms occurs by",
-          "options": ["Cell enlargement", "Cell division", "Reproduction", "Metabolism"],
-          "answer": 1,
-          "explanation": "Multicellular organisms grow by mitotic cell division."
-        },
-
-        {
-          "question": "Which of the following cannot be considered as defining property of living beings?",
-          "options": ["Growth", "Reproduction", "Metabolism", "Response to stimuli"],
-          "answer": 1,
-          "explanation": "Some living organisms (like sterile workers in bees) do not reproduce."
-        },
-
-        {
-          "question": "Amoeba reproduces by",
-          "options": ["Binary fission", "Budding", "Fragmentation", "Spore formation"],
-          "answer": 0,
-          "explanation": "Amoeba reproduces through binary fission."
-        },
-
-        {
-          "question": "Metabolism means",
-          "options": ["Sum of all chemical reactions", "Respiration only", "Digestion", "Movement"],
-          "answer": 0,
-          "explanation": "Metabolism includes all anabolic and catabolic reactions."
-        },
-
-        {
-          "question": "Which is present in all living organisms?",
-          "options": ["Growth", "Consciousness", "Reproduction", "Movement"],
-          "answer": 1,
-          "explanation": "Consciousness is the defining universal property of living organisms."
-        },
-
-        {
-          "question": "Viruses are",
-          "options": ["Living", "Non living", "Living only inside host", "Plants"],
-          "answer": 2,
-          "explanation": "Viruses show life only inside host cells."
-        },
-
-        {
-          "question": "Binomial nomenclature was proposed by",
-          "options": ["Darwin", "Linnaeus", "Whittaker", "Aristotle"],
-          "answer": 1,
-          "explanation": "Carolus Linnaeus introduced binomial nomenclature."
-        },
-
-        {
-          "question": "Each scientific name has",
-          "options": ["One word", "Two words", "Three words", "Four words"],
-          "answer": 1,
-          "explanation": "Scientific name = Genus + Species."
-        }
-
-      ],
-
-      "biological-classification": [],
-      "plant-kingdom": [],
-      "animal-kingdom": []
-
-    }
-  },
-
-  "12": {
-    "biology": {
-
-      "reproduction-in-organisms": [],
-      "sexual-reproduction-flowering-plants": [],
-      "human-reproduction": []
-
+    "class12": {
+      "biology": {}
     }
   }
 }
