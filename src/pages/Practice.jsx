@@ -22,17 +22,41 @@ export default function Practice({ cls, subject, chapter }) {
   const [selected, setSelected] = useState(null)
   const [result, setResult] = useState(null)
   const [reaction, setReaction] = useState("")
+  const [loading, setLoading] = useState(true)
 
+  // 🔥 LOAD QUESTIONS
   useEffect(() => {
+    setLoading(true)
+
     fetch("/questions.json")
       .then(res => res.json())
       .then(data => {
-        const filtered = data.filter(
-          q => q.class === cls && q.subject === subject && q.chapter === chapter
+
+        // ⭐ TYPE SAFE FILTER
+        const filtered = data.filter(q =>
+          String(q.class) === String(cls) &&
+          q.subject.toLowerCase() === subject.toLowerCase() &&
+          q.chapter.toLowerCase() === chapter.toLowerCase()
         )
+
         setQuestions(filtered)
+        setIndex(0)
+        setSelected(null)
+        setResult(null)
+        setReaction("")
+        setLoading(false)
       })
+      .catch(() => setLoading(false))
+
   }, [cls, subject, chapter])
+
+
+  // ===== SAFETY =====
+  if (loading)
+    return <div className="p-6 text-white">Loading questions...</div>
+
+  if (!questions.length)
+    return <div className="p-6 text-red-400">No questions found for this chapter</div>
 
   const q = questions[index]
 
@@ -57,10 +81,6 @@ export default function Practice({ cls, subject, chapter }) {
     setSelected(null)
     setResult(null)
     setReaction("")
-  }
-
-  if(!q){
-    return <div className="p-6 text-white">Loading questions...</div>
   }
 
   return (

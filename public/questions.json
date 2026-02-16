@@ -1,32 +1,20 @@
-{
-  "11": {
-    "biology": {
-      "the-living-world": [
-        {
-          "q": "Growth is characteristic of?",
-          "options": ["Living only", "Non living", "Both", "None"],
-          "answer": 0,
-          "explanation": "Only living organisms show internal growth due to cell division."
-        }
-      ],
-
-      "biological-classification": [
-        {
-          "q": "5 kingdom classification given by?",
-          "options": ["Linnaeus", "Whittaker", "Darwin", "Aristotle"],
-          "answer": 1,
-          "explanation": "R.H. Whittaker proposed 5 kingdom classification in 1969."
-        }
-      ],
-
-      "cell-the-unit-of-life": [
-        {
-          "q": "Powerhouse of cell is?",
-          "options": ["Ribosome", "Mitochondria", "Golgi body", "Nucleus"],
-          "answer": 1,
-          "explanation": "Mitochondria produces ATP via oxidative phosphorylation."
-        }
-      ]
-    }
+[
+  {
+    "class": "11",
+    "subject": "biology",
+    "chapter": "cell-the-unit-of-life",
+    "question": "Powerhouse of cell is?",
+    "options": ["Ribosome","Mitochondria","Golgi body","Nucleus"],
+    "answer": 1,
+    "explanation": "Mitochondria produces ATP via cellular respiration hence called powerhouse"
+  },
+  {
+    "class": "11",
+    "subject": "biology",
+    "chapter": "cell-the-unit-of-life",
+    "question": "Who discovered cell?",
+    "options": ["Hooke","Leeuwenhoek","Darwin","Mendel"],
+    "answer": 0,
+    "explanation": "Robert Hooke observed cork cells in 1665"
   }
-}
+]
