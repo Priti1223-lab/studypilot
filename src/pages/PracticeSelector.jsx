@@ -5,20 +5,36 @@ export default function PracticeSelector({ startPractice }) {
   const [cls, setCls] = useState("11")
   const [subject, setSubject] = useState("biology")
   const [chapters, setChapters] = useState([])
+  const [loading, setLoading] = useState(true)
 
   useEffect(() => {
-    fetch("/questions.json")
-      .then(res => res.json())
-      .then(data => {
-        const ch = [
-          ...new Set(
-            data
-              .filter(q => q.class === cls && q.subject === subject)
-              .map(q => q.chapter)
-          )
-        ]
+
+    async function load() {
+      try {
+        const res = await fetch("/questions.json")
+        const data = await res.json()
+
+        console.log("ALL DATA:", data)
+
+        const filtered = data.filter(q =>
+          String(q.class) === String(cls) &&
+          String(q.subject).toLowerCase() === subject.toLowerCase()
+        )
+
+        console.log("FILTERED:", filtered)
+
+        const ch = [...new Set(filtered.map(q => q.chapter))]
         setChapters(ch)
-      })
+
+      } catch (err) {
+        console.error("JSON ERROR:", err)
+      }
+
+      setLoading(false)
+    }
+
+    load()
+
   }, [cls, subject])
 
   return (
@@ -28,6 +44,7 @@ export default function PracticeSelector({ startPractice }) {
         🧠 Chapter Practice
       </h1>
 
+      {/* CLASS */}
       <label className="block mb-2">Class</label>
       <select
         value={cls}
@@ -38,6 +55,7 @@ export default function PracticeSelector({ startPractice }) {
         <option value="12">Class 12</option>
       </select>
 
+      {/* SUBJECT */}
       <label className="block mb-2">Subject</label>
       <select
         value={subject}
@@ -49,9 +67,13 @@ export default function PracticeSelector({ startPractice }) {
         <option value="physics">Physics</option>
       </select>
 
+      {/* CHAPTERS */}
       <div className="space-y-3">
-        {chapters.length === 0 && (
-          <p className="text-gray-400">No chapters found</p>
+
+        {loading && <p className="text-gray-400">Loading chapters...</p>}
+
+        {!loading && chapters.length === 0 && (
+          <p className="text-gray-400">No chapters found (Check JSON format)</p>
         )}
 
         {chapters.map((ch)=>(
@@ -63,6 +85,7 @@ export default function PracticeSelector({ startPractice }) {
             {ch.replaceAll("-"," ").toUpperCase()}
           </button>
         ))}
+
       </div>
 
     </div>
