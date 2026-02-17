@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react"
+import { supabase } from "../lib/supabaseClient"
 
 const correctMessages = [
 "Wah bhai 🔥","Concept pakad liya tune","Seedha +4 mil gaya",
@@ -20,31 +21,38 @@ export default function Practice({ cls, subject, chapter }) {
   const [reaction, setReaction] = useState("")
   const [loading, setLoading] = useState(true)
 
-  // 🔥 LOAD QUESTIONS (NEW DATABASE STRUCTURE)
+  // 🔥 LOAD QUESTIONS FROM DATABASE
   useEffect(() => {
 
-    setLoading(true)
+    async function loadQuestions(){
 
-    fetch("/questions.json")
-      .then(res => res.json())
-      .then(data => {
+      setLoading(true)
 
-        const classKey = cls === "11" ? "class11" : "class12"
+      const { data, error } = await supabase
+        .from("questions")
+        .select("*")
+        .eq("class", cls)
+        .eq("subject", subject)
+        .eq("chapter", chapter)
+        .order("created_at", { ascending: true })
 
-        const chapterQuestions =
-          data?.classes?.[classKey]?.[subject]?.[chapter] || []
+      if(error){
+        console.error("DB ERROR:", error)
+        setQuestions([])
+      } else {
+        setQuestions(data || [])
+      }
 
-        setQuestions(chapterQuestions)
-        setIndex(0)
-        setSelected(null)
-        setResult(null)
-        setReaction("")
-        setLoading(false)
-      })
-      .catch(() => setLoading(false))
+      setIndex(0)
+      setSelected(null)
+      setResult(null)
+      setReaction("")
+      setLoading(false)
+    }
+
+    loadQuestions()
 
   }, [cls, subject, chapter])
-
 
   // ===== SAFETY =====
   if (loading)
@@ -62,7 +70,7 @@ export default function Practice({ cls, subject, chapter }) {
   function checkAnswer(i){
     setSelected(i)
 
-    if(i === q.answer){
+    if(i === q.correct){
       setResult("correct")
       setReaction(random(correctMessages))
     }else{
@@ -88,23 +96,25 @@ export default function Practice({ cls, subject, chapter }) {
       <div className="bg-card p-4 sm:p-6 rounded-xl border border-borderc">
 
         <h2 className="text-base sm:text-lg mb-2 text-accent font-semibold">
-  Question {index + 1} / {questions.length}
-</h2>
+          Question {index + 1} / {questions.length}
+        </h2>
 
-<h2 className="text-base sm:text-lg mb-4">
-  {q.question}
-</h2>
-
+        {/* QUESTION TEXT OR IMAGE */}
+        {q.image_url ? (
+          <img src={q.image_url} alt="question" className="mb-4 rounded-lg"/>
+        ) : (
+          <h2 className="text-base sm:text-lg mb-4">{q.question}</h2>
+        )}
 
         <div className="space-y-3">
-          {q.options.map((opt,i)=>(
+          {[q.a, q.b, q.c, q.d].map((opt,i)=>(
             <button
               key={i}
               onClick={()=>checkAnswer(i)}
               className={`w-full text-left p-3 rounded-lg border transition
               ${
                 selected===i
-                ? i===q.answer
+                ? i===q.correct
                   ? "bg-green-600 border-green-400 text-white"
                   : "bg-red-600 border-red-400 text-white"
                 : "hover:bg-bg border-borderc"
