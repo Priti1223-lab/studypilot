@@ -25,7 +25,7 @@ import WeightTrackingChart from './components/charts/WeightTrackingChart'
 import FormulaSheets from './pages/FormulaSheets'
 import PracticeSelector from './pages/PracticeSelector'
 import Practice from './pages/Practice'
-import AdminPanel from './pages/AdminPanel'   // ⭐ IMPORTANT
+import AdminPanel from './pages/AdminPanel'
 
 export default function App() {
 
@@ -35,7 +35,6 @@ export default function App() {
   const [activeTab, setActiveTab] = useState('dashboard')
   const [adminAccess, setAdminAccess] = useState(false)
 
-  // practice data
   const [practiceData, setPracticeData] = useState(null)
 
   function startPractice(cls, subject, chapter){
@@ -43,30 +42,45 @@ export default function App() {
     setActiveTab("practice")
   }
 
-  // 🔐 ADMIN SECURITY
+  // =========================
+  // 🔐 ADMIN ACCESS SYSTEM
+  // =========================
   function handleAdminAccess(){
 
+    const ADMIN_EMAIL = import.meta.env.VITE_ADMIN_EMAIL?.trim()
+    const ADMIN_PASS = import.meta.env.VITE_ADMIN_PASSWORD?.trim()
+    const ADMIN_PIN = import.meta.env.VITE_ADMIN_PIN?.trim()
+
+    if(!ADMIN_EMAIL || !ADMIN_PASS || !ADMIN_PIN){
+      alert("Admin env variables missing in Vercel")
+      return
+    }
+
     const email = prompt("Enter Admin Email")
-    if(email !== import.meta.env.VITE_ADMIN_EMAIL){
+    if(!email || email.trim() !== ADMIN_EMAIL){
       alert("Access Denied")
+      setAdminAccess(false)
       setActiveTab("dashboard")
       return
     }
 
     const pass = prompt("Enter Admin Password")
-    if(pass !== import.meta.env.VITE_ADMIN_PASSWORD){
+    if(!pass || pass.trim() !== ADMIN_PASS){
       alert("Wrong Password")
+      setAdminAccess(false)
       setActiveTab("dashboard")
       return
     }
 
     const pin = prompt("Enter Security PIN")
-    if(pin !== import.meta.env.VITE_ADMIN_PIN){
+    if(!pin || pin.trim() !== ADMIN_PIN){
       alert("Wrong PIN")
+      setAdminAccess(false)
       setActiveTab("dashboard")
       return
     }
 
+    // SUCCESS
     setAdminAccess(true)
     setActiveTab("admin")
   }
@@ -105,10 +119,10 @@ export default function App() {
       case 'weight-chart': return <WeightTrackingChart />
 
       case 'admin':
-        if(!adminAccess) return <Dashboard />
-        return <AdminPanel />
+        return adminAccess ? <AdminPanel /> : <Dashboard />
 
-      default: return <Dashboard />
+      default:
+        return <Dashboard />
     }
   }
 
@@ -136,4 +150,3 @@ export default function App() {
     </div>
   )
 }
-
