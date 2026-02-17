@@ -1,15 +1,14 @@
 import { useState, useEffect } from "react"
-import { supabase } from "../lib/supabaseClient"
+import { supabase } from "../lib/supabase"
 
 const correctMessages = [
 "Wah bhai 🔥","Concept pakad liya tune","Seedha +4 mil gaya",
-"Doctor material 😎","AIIMS calling ☎️","NCERT strong ho rahi hai",
-"Perfect attempt","Topper vibes","Bahut badhiya"
+"Doctor material 😎","AIIMS calling ☎️","Perfect attempt"
 ]
 
 const wrongMessages = [
 "Koi na bhai","NCERT line miss ho gayi","Revise karna padega",
-"Almost tha","Next wala sahi hoga","Ye trap question tha"
+"Almost tha","Ye trap question tha"
 ]
 
 export default function Practice({ cls, subject, chapter }) {
@@ -21,7 +20,7 @@ export default function Practice({ cls, subject, chapter }) {
   const [reaction, setReaction] = useState("")
   const [loading, setLoading] = useState(true)
 
-  // 🔥 LOAD QUESTIONS FROM DATABASE
+  // 🔥 LOAD FROM SUPABASE
   useEffect(() => {
 
     async function loadQuestions(){
@@ -34,19 +33,15 @@ export default function Practice({ cls, subject, chapter }) {
         .eq("class", cls)
         .eq("subject", subject)
         .eq("chapter", chapter)
-        .order("created_at", { ascending: true })
+        .order("id")
 
       if(error){
-        console.error("DB ERROR:", error)
+        console.log(error)
         setQuestions([])
-      } else {
-        setQuestions(data || [])
+      }else{
+        setQuestions(data)
       }
 
-      setIndex(0)
-      setSelected(null)
-      setResult(null)
-      setReaction("")
       setLoading(false)
     }
 
@@ -54,12 +49,11 @@ export default function Practice({ cls, subject, chapter }) {
 
   }, [cls, subject, chapter])
 
-  // ===== SAFETY =====
   if (loading)
     return <div className="p-6 text-textc">Loading questions...</div>
 
   if (!questions.length)
-    return <div className="p-6 text-red-400">No questions found for this chapter</div>
+    return <div className="p-6 text-red-400">No questions found</div>
 
   const q = questions[index]
 
@@ -99,13 +93,23 @@ export default function Practice({ cls, subject, chapter }) {
           Question {index + 1} / {questions.length}
         </h2>
 
-        {/* QUESTION TEXT OR IMAGE */}
-        {q.image_url ? (
-          <img src={q.image_url} alt="question" className="mb-4 rounded-lg"/>
-        ) : (
-          <h2 className="text-base sm:text-lg mb-4">{q.question}</h2>
+        {/* QUESTION TEXT */}
+        {q.question && (
+          <h2 className="text-base sm:text-lg mb-4">
+            {q.question}
+          </h2>
         )}
 
+        {/* IMAGE QUESTION */}
+        {q.image && (
+          <img
+            src={q.image}
+            alt="question"
+            className="mb-4 rounded-lg border"
+          />
+        )}
+
+        {/* OPTIONS */}
         <div className="space-y-3">
           {[q.a, q.b, q.c, q.d].map((opt,i)=>(
             <button
