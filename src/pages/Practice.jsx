@@ -1,14 +1,14 @@
 import { useState, useEffect } from "react"
-import { supabase } from "../lib/supabase"
 
 const correctMessages = [
 "Wah bhai 🔥","Concept pakad liya tune","Seedha +4 mil gaya",
-"Doctor material 😎","AIIMS calling ☎️","Perfect attempt"
+"Doctor material 😎","AIIMS calling ☎️","NCERT strong ho rahi hai",
+"Perfect attempt","Topper vibes","Bahut badhiya"
 ]
 
 const wrongMessages = [
 "Koi na bhai","NCERT line miss ho gayi","Revise karna padega",
-"Almost tha","Ye trap question tha"
+"Almost tha","Next wala sahi hoga","Ye trap question tha"
 ]
 
 export default function Practice({ cls, subject, chapter }) {
@@ -20,34 +20,41 @@ export default function Practice({ cls, subject, chapter }) {
   const [reaction, setReaction] = useState("")
   const [loading, setLoading] = useState(true)
 
-  // 🔥 LOAD FROM SUPABASE
+  // 🔥 LOAD FROM SUPABASE API (NOT JSON)
   useEffect(() => {
 
-    async function loadQuestions(){
+    setLoading(true)
 
-      setLoading(true)
-
-      const { data, error } = await supabase
-        .from("questions")
-        .select("*")
-        .eq("class", cls)
-        .eq("subject", subject)
-        .eq("chapter", chapter)
-        .order("id")
-
-      if(error){
-        console.log(error)
-        setQuestions([])
-      }else{
-        setQuestions(data)
+    fetch(`${import.meta.env.VITE_SUPABASE_URL}/rest/v1/questions?class=eq.${cls}&subject=eq.${subject}&chapter=eq.${chapter}`, {
+      headers: {
+        apikey: import.meta.env.VITE_SUPABASE_ANON_KEY,
+        Authorization: `Bearer ${import.meta.env.VITE_SUPABASE_ANON_KEY}`
       }
+    })
+      .then(res => res.json())
+      .then(data => {
 
-      setLoading(false)
-    }
+        // 🔥 CONVERT DATABASE → UI FORMAT
+        const formatted = data.map(q => ({
+          question: q.question_text,
+          options: [q.option_a, q.option_b, q.option_c, q.option_d],
+          answer: ["A","B","C","D"].indexOf(q.correct_option),
+          explanation: q.explanation,
+          image: q.image_url
+        }))
 
-    loadQuestions()
+        setQuestions(formatted)
+        setIndex(0)
+        setSelected(null)
+        setResult(null)
+        setReaction("")
+        setLoading(false)
+
+      })
+      .catch(() => setLoading(false))
 
   }, [cls, subject, chapter])
+
 
   if (loading)
     return <div className="p-6 text-textc">Loading questions...</div>
@@ -64,7 +71,7 @@ export default function Practice({ cls, subject, chapter }) {
   function checkAnswer(i){
     setSelected(i)
 
-    if(i === q.correct){
+    if(i === q.answer){
       setResult("correct")
       setReaction(random(correctMessages))
     }else{
@@ -93,32 +100,25 @@ export default function Practice({ cls, subject, chapter }) {
           Question {index + 1} / {questions.length}
         </h2>
 
-        {/* QUESTION TEXT */}
-        {q.question && (
-          <h2 className="text-base sm:text-lg mb-4">
-            {q.question}
-          </h2>
-        )}
-
         {/* IMAGE QUESTION */}
         {q.image && (
-          <img
-            src={q.image}
-            alt="question"
-            className="mb-4 rounded-lg border"
-          />
+          <img src={q.image} className="mb-4 rounded-lg" />
         )}
 
-        {/* OPTIONS */}
+        {/* TEXT QUESTION */}
+        {q.question && (
+          <h2 className="text-base sm:text-lg mb-4">{q.question}</h2>
+        )}
+
         <div className="space-y-3">
-          {[q.a, q.b, q.c, q.d].map((opt,i)=>(
+          {q.options.map((opt,i)=>(
             <button
               key={i}
               onClick={()=>checkAnswer(i)}
               className={`w-full text-left p-3 rounded-lg border transition
               ${
                 selected===i
-                ? i===q.correct
+                ? i===q.answer
                   ? "bg-green-600 border-green-400 text-white"
                   : "bg-red-600 border-red-400 text-white"
                 : "hover:bg-bg border-borderc"
@@ -147,5 +147,4 @@ export default function Practice({ cls, subject, chapter }) {
     </div>
   )
 }
-
 
