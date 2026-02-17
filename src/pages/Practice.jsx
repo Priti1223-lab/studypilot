@@ -87,7 +87,14 @@ export default function Practice({ cls, subject, chapter }) {
 
       <div className="bg-card p-4 sm:p-6 rounded-xl border border-borderc">
 
-        <h2 className="text-base sm:text-lg mb-4">{q.question}</h2>
+        <h2 className="text-base sm:text-lg mb-2 text-accent font-semibold">
+  Question {index + 1} / {questions.length}
+</h2>
+
+<h2 className="text-base sm:text-lg mb-4">
+  {q.question}
+</h2>
+
 
         <div className="space-y-3">
           {q.options.map((opt,i)=>(

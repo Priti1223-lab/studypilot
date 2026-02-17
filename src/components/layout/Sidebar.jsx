@@ -1,13 +1,14 @@
 import { useState } from 'react'
 
 export default function Sidebar({ activeTab, setActiveTab }) {
+
   const [isOpen, setIsOpen] = useState(true)
 
   const menuItems = [
     { id: 'dashboard', label: 'Dashboard', icon: '📊' },
     { id: 'mcq', label: 'Daily MCQ', icon: '📝' },
 
-    // ⭐ NEW CHAPTER PRACTICE
+    // Practice
     { id: 'practice-selector', label: 'Chapter Practice', icon: '🧠' },
 
     { id: 'pomodoro', label: 'Pomodoro Timer', icon: '⏳' },
@@ -15,8 +16,8 @@ export default function Sidebar({ activeTab, setActiveTab }) {
     { id: 'revision', label: 'Revision Planner', icon: '📅' },
     { id: 'mistakes', label: 'Mistake Notebook', icon: '📖' },
 
+    // Tools
     { id: 'formula', label: 'Formula Sheets', icon: '📘' },
-
     { id: 'bmi', label: 'BMI Calculator', icon: '⚖️' },
     { id: 'calories', label: 'Calorie Calculator', icon: '🔥' },
     { id: 'protein', label: 'Protein Calculator', icon: '💪' },
@@ -24,11 +25,14 @@ export default function Sidebar({ activeTab, setActiveTab }) {
     { id: 'weight-gain', label: 'Weight Gain Planner', icon: '📈' },
     { id: 'study-chart', label: 'Study Chart', icon: '📉' },
     { id: 'weight-chart', label: 'Weight Chart', icon: '📊' },
+
+    // 🔒 ADMIN (last me rakha — intentional)
+    { id: 'admin', label: 'Admin Portal', icon: '🔒' },
   ]
 
   return (
     <>
-      {/* Mobile Menu Button */}
+      {/* Mobile Toggle Button */}
       <button
         onClick={() => setIsOpen(!isOpen)}
         className="lg:hidden fixed top-20 left-4 z-50 bg-card border border-borderc p-2 rounded-lg shadow-soft"
@@ -42,13 +46,17 @@ export default function Sidebar({ activeTab, setActiveTab }) {
           isOpen ? 'translate-x-0' : '-translate-x-full'
         } lg:translate-x-0 fixed lg:sticky top-16 lg:top-0 left-0 h-screen w-64 bg-card border-r border-borderc overflow-y-auto transition-transform duration-200 z-40`}
       >
+
         <div className="p-4">
+
           <h2 className="text-sm font-semibold text-textc uppercase tracking-wider mb-4">
             Navigation
           </h2>
 
           <nav className="space-y-1">
+
             {menuItems.map((item) => (
+
               <button
                 key={item.id}
                 onClick={() => {
@@ -64,12 +72,14 @@ export default function Sidebar({ activeTab, setActiveTab }) {
                 <span className="text-xl">{item.icon}</span>
                 <span className="font-medium">{item.label}</span>
               </button>
+
             ))}
+
           </nav>
         </div>
       </aside>
 
-      {/* Overlay for mobile */}
+      {/* Overlay (mobile) */}
       {isOpen && (
         <div
           onClick={() => setIsOpen(false)}

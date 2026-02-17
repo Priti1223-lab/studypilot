@@ -25,19 +25,50 @@ import WeightTrackingChart from './components/charts/WeightTrackingChart'
 import FormulaSheets from './pages/FormulaSheets'
 import PracticeSelector from './pages/PracticeSelector'
 import Practice from './pages/Practice'
+import AdminPanel from './pages/AdminPanel'   // ⭐ IMPORTANT
 
 export default function App() {
 
   const { user, loading } = useAuth()
+
   const [showLogin, setShowLogin] = useState(true)
   const [activeTab, setActiveTab] = useState('dashboard')
+  const [adminAccess, setAdminAccess] = useState(false)
 
-  // ⭐ selected chapter
+  // practice data
   const [practiceData, setPracticeData] = useState(null)
 
   function startPractice(cls, subject, chapter){
     setPracticeData({cls, subject, chapter})
     setActiveTab("practice")
+  }
+
+  // 🔐 ADMIN SECURITY
+  function handleAdminAccess(){
+
+    const email = prompt("Enter Admin Email")
+    if(email !== import.meta.env.VITE_ADMIN_EMAIL){
+      alert("Access Denied")
+      setActiveTab("dashboard")
+      return
+    }
+
+    const pass = prompt("Enter Admin Password")
+    if(pass !== import.meta.env.VITE_ADMIN_PASSWORD){
+      alert("Wrong Password")
+      setActiveTab("dashboard")
+      return
+    }
+
+    const pin = prompt("Enter Security PIN")
+    if(pin !== import.meta.env.VITE_ADMIN_PIN){
+      alert("Wrong PIN")
+      setActiveTab("dashboard")
+      return
+    }
+
+    setAdminAccess(true)
+    setActiveTab("admin")
   }
 
   if (loading) return <div className="p-10 text-white">Loading...</div>
@@ -56,7 +87,6 @@ export default function App() {
         return <PracticeSelector startPractice={startPractice} />
 
       case 'practice':
-        // 🔴 CRASH FIX
         if(!practiceData) return <PracticeSelector startPractice={startPractice} />
         return <Practice cls={practiceData.cls} subject={practiceData.subject} chapter={practiceData.chapter} />
 
@@ -74,6 +104,10 @@ export default function App() {
       case 'study-chart': return <StudyHoursChart />
       case 'weight-chart': return <WeightTrackingChart />
 
+      case 'admin':
+        if(!adminAccess) return <Dashboard />
+        return <AdminPanel />
+
       default: return <Dashboard />
     }
   }
@@ -84,13 +118,22 @@ export default function App() {
       <Navbar />
 
       <div className="flex flex-1">
-        <Sidebar activeTab={activeTab} setActiveTab={setActiveTab} />
+
+        <Sidebar
+          activeTab={activeTab}
+          setActiveTab={(tab)=>{
+            if(tab === "admin") handleAdminAccess()
+            else setActiveTab(tab)
+          }}
+        />
 
         <main className="flex-1 p-4 md:p-6 overflow-auto">
           {renderContent()}
         </main>
+
       </div>
 
     </div>
   )
 }
+
